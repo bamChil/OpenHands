@@ -133,5 +133,5 @@ MAP_REPO_TO_PARSER = {
 }
 
 MAP_REPO_TO_TEST_CMD = {
-    "linkedin/Liger-Kernel": "pytest -rA -p no:cacheprovider",
+    "linkedin/Liger-Kernel": "pytest -rA -p no:cacheprovider --color=no",
 }

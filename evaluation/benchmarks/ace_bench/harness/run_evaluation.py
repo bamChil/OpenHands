@@ -38,6 +38,7 @@ from ..harness.constants import (
     LOG_REPORT,
     LOG_TEST_OUTPUT,
     UTF8,
+    DEFAULT_PYTEST_CMD,
 )
 from ..harness.test_parsers import MAP_REPO_TO_PARSER, MAP_REPO_TO_TEST_CMD
 from ..harness.test_parsers import parse_log_pytest
@@ -376,7 +377,7 @@ def run_instance_level1(
         # Step 6: Run tests
         logger.info("Step 6: Running tests")
         repo_name = instance.get("repo_name", "")
-        test_cmd = MAP_REPO_TO_TEST_CMD.get(repo_name, "pytest -rA -p no:cacheprovider")
+        test_cmd = MAP_REPO_TO_TEST_CMD.get(repo_name, DEFAULT_PYTEST_CMD)
 
         # Get P2P tests
         pass_to_pass = instance.get('PASS_TO_PASS', [])
@@ -627,7 +628,7 @@ def run_instance_level2(
         # Step 7: Run F2P test
         logger.info("Step 7: Running F2P tests")
         repo_name = instance.get("repo_name", "")
-        test_cmd = MAP_REPO_TO_TEST_CMD.get(repo_name, "pytest -rA -p no:cacheprovider")
+        test_cmd = MAP_REPO_TO_TEST_CMD.get(repo_name, DEFAULT_PYTEST_CMD)
 
         # Get F2P test path from instance
         fail_to_pass = instance.get('FAIL_TO_PASS', [])

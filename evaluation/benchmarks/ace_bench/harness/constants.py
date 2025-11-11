@@ -26,3 +26,6 @@ APPLY_PATCH_PASS = ">>>>> Applied Patch"
 
 # Encoding
 UTF8 = "utf-8"
+
+# Default pytest command
+DEFAULT_PYTEST_CMD = "pytest -rA -p no:cacheprovider --color=no"
