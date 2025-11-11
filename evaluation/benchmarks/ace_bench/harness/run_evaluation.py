@@ -853,10 +853,9 @@ def run_instance(
         # Determine if resolved
         resolved = results.get("f2p_success", False) and results.get("p2p_success", True)
 
-        # Calculate overall pass rate
-        total_success = len(f2p_success) + len(p2p_success)
-        total_tests = len(f2p_success) + len(f2p_failure) + len(p2p_success) + len(p2p_failure)
-        overall_pass_rate = round(total_success / total_tests, 4) if total_tests > 0 else 0.0
+        # Calculate F2P pass rate (only FAIL_TO_PASS tests, not including PASS_TO_PASS)
+        f2p_total = len(f2p_success) + len(f2p_failure)
+        f2p_pass_rate = round(len(f2p_success) / f2p_total, 4) if f2p_total > 0 else 0.0
 
         # Generate report in the required format
         report = {
@@ -865,7 +864,7 @@ def run_instance(
                 "patch_exists": patch_exists,
                 "patch_successfully_applied": patch_applied,
                 "resolved": resolved,
-                "pass_rate": overall_pass_rate,
+                "pass_rate": f2p_pass_rate,
                 "tests_status": {
                     "FAIL_TO_PASS": {
                         "success": f2p_success,
@@ -886,7 +885,7 @@ def run_instance(
         logger.info(f"{'=' * 60}")
         logger.info(f"Evaluation completed for {instance_id}")
         logger.info(f"Resolved: {resolved}")
-        logger.info(f"Pass rate: {overall_pass_rate}")
+        logger.info(f"F2P Pass rate: {f2p_pass_rate}")
         logger.info(f"{'=' * 60}")
 
         # Save review codes if requested
@@ -1138,13 +1137,13 @@ def main():
     # Calculate rates
     resolved_rate = round(resolved_instances / total_instances, 4) if total_instances > 0 else 0.0
 
-    # Calculate overall pass rate (average of all individual pass rates)
+    # Calculate average F2P pass rate (average of all individual F2P pass rates)
     pass_rates = []
     for result in results:
         if 'report' in result:
             for instance_id, instance_report in result['report'].items():
                 pass_rates.append(instance_report.get('pass_rate', 0.0))
-    overall_pass_rate = round(sum(pass_rates) / len(pass_rates), 4) if pass_rates else 0.0
+    average_f2p_pass_rate = round(sum(pass_rates) / len(pass_rates), 4) if pass_rates else 0.0
 
     # Generate summary report
     summary_report = {
@@ -1156,7 +1155,7 @@ def main():
         "empty_patch_instances": empty_patch_instances,
         "error_instances": error_instances,
         "resolved_rate": resolved_rate,
-        "pass_rate": overall_pass_rate,
+        "pass_rate": average_f2p_pass_rate,
         "submitted_ids": submitted_ids,
         "completed_ids": completed_ids,
         "incomplete_ids": incomplete_ids,
@@ -1184,7 +1183,7 @@ def main():
     print(f"Empty patch: {empty_patch_instances}")
     print(f"Errors: {error_instances}")
     print(f"Resolved rate: {resolved_rate * 100:.1f}%")
-    print(f"Average pass rate: {overall_pass_rate * 100:.1f}%")
+    print(f"Average F2P pass rate: {average_f2p_pass_rate * 100:.1f}%")
     print(f"{'=' * 60}")
 
 
